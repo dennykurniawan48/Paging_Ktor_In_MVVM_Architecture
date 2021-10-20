@@ -16,8 +16,8 @@ class Repository @Inject constructor() {
     val client = HttpClient(Android){
         install(JsonFeature)
     }
-    suspend fun getCharacter(): NetworkResult<Characters>?{
-        val data = ApiServiceImpl(client = client).retriveCharacter("")
+    suspend fun getCharacter(page: Int): NetworkResult<Characters>?{
+        val data = ApiServiceImpl(client = client).retriveCharacter(page)
         Log.d("response d", data.toString())
         return data
     }

@@ -22,6 +22,8 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import coil.compose.rememberImagePainter
 import com.signaltekno.paging3androidcompose.ui.theme.Paging3AndroidComposeTheme
 import com.signaltekno.paging3androidcompose.viewmodel.PostViewModel
@@ -32,34 +34,28 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val viewModel: PostViewModel by viewModels()
-        viewModel.getDatax()
+       // viewModel.getDatax()
 
         setContent {
-            val result by viewModel.datax.observeAsState()
-            if(result is NetworkResult.Loading){
-                Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-                    CircularProgressIndicator()
-                }
-            }else if(result is NetworkResult.Error){
-                Text("Error showing data", modifier = Modifier.size(40.dp))
-            }else if(result is NetworkResult.Success) {
+            val result = viewModel.characters.collectAsLazyPagingItems()
                 LazyColumn(Modifier.padding(4.dp)) {
-                    if (result != null) {
-                        items(result!!.data!!.results) {
+                   // if (result != null) {
+                        items(result) {
                             Row(modifier = Modifier.padding(top=4.dp)){
                                 Image(
-                                    painter = rememberImagePainter(it.image),
+                                    painter = rememberImagePainter(it?.image),
                                     contentDescription = null,
                                     modifier = Modifier.size(80.dp)
                                 )
-                                Column(modifier = Modifier.height(80.dp).padding(start=16.dp), verticalArrangement = Arrangement.Center) {
-                                    Text(text = it.name, style = MaterialTheme.typography.body1, fontWeight = FontWeight.Bold)
+                                Column(modifier = Modifier
+                                    .height(80.dp)
+                                    .padding(start = 16.dp), verticalArrangement = Arrangement.Center) {
+                                    Text(text = it!!.name, style = MaterialTheme.typography.body1, fontWeight = FontWeight.Bold)
                                     Text(text = it.species + " " + it.gender, style = MaterialTheme.typography.subtitle2)
                                 }
                             }
                         }
-                    }
-                }
+                  //  }
             }
         }
     }

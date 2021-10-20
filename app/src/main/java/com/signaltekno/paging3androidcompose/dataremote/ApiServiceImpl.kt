@@ -13,11 +13,11 @@ import java.lang.Exception
 class ApiServiceImpl(
     private val client: HttpClient
 ): ApiService {
-    override suspend fun retriveCharacter(name: String): NetworkResult<Characters>? {
+    override suspend fun retriveCharacter(page: Int): NetworkResult<Characters>? {
 
         return try{
             val response: Characters = client.get{
-                url("https://rickandmortyapi.com/api/character?page=1")
+                url("https://rickandmortyapi.com/api/character?page=${page}")
             }
             NetworkResult.Success(response)
         }catch (e: RedirectResponseException){
